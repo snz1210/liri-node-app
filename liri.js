@@ -3,10 +3,11 @@ var keys = require("./keys.js");
 var fs = require("fs");
 var request = require("request");
 var spotify = require("spotify");
-var client = new Twitter(keys);
+var client = new Twitter(keys.twitterKeys);
 var userCommand = process.argv[2];
 var userInput = process.argv[3];
 console.log(keys);
+
 function myTweets () {
 
 	var params = {screen_name: 'JohnSno60581552'};
@@ -23,11 +24,43 @@ function myTweets () {
 })
 };
 
+function spotifyThisSong () {
+
+	var SpotifyWebApi = require('./node_modules/spotify-web-api-node');
+ 
+	var spotifyApi = new Spotify(keys.spotifyKeys);
+	
+	if (userInput != undefined) {
+		
+		spotifyApi.searchTracks(userInput)
+
+	  	.then(function(data) {
+
+	    	console.log(data.body.tracks.items[0].artists[0].name);
+	    	console.log(data.body.tracks.items[0].album.name);
+	    	console.log(data.body.tracks.items[0].name);
+	    	console.log(data.body.tracks.items[0].preview_url);
+	  	}, 
+
+	  	function(err) {
+	    	console.error(err);
+	  	});
+
+  	} else {
+
+  		userInput = 'The Sign';
+  		spotifyThisSong();
+  	}
+
+};
+
+
+
 
 if (userCommand === "my-tweets") {
 	myTweets ();
 }
 
-// SPOTIFY
-// Client ID 4f8c7f0fd02c43f2bf58a14c170ff36a
-// Client Secret c422f593c5d84462b9a3d94dd30de56d
+if (userCommand === "spotify-this-song") {
+	SpotifyThisSong ();
+}
